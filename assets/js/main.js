@@ -11,6 +11,7 @@ const randomBtn = $('.btn-random');
 const repeatBtn = $('.btn-repeat')
 const playlist = $('.playlist');
 const USER = 'Ông_Chủ_Kim_2k'
+var arrRandom = [];
 const app = {
     song: song,
     currentIndex: 0,
@@ -70,17 +71,20 @@ const app = {
         console.log(cdThumbAnimate);
         //
         playBtn.onclick = function() {
-
             if (_this.isPlaying) {
                 audio.pause();
             } else {
                 audio.play();
+                if (_this.isRandom && arrRandom.indexOf(+_this.currentIndex) == -1) {
+                    arrRandom.push(+_this.currentIndex)
+                }
             }
         }
         audio.onplay = function() {
             _this.isPlaying = true;
             $('.player').classList.add('playing');
             cdThumbAnimate.play();
+
         }
         audio.onended = function() {
             console.log(_this.isRepeat);
@@ -131,6 +135,9 @@ const app = {
         randomBtn.onclick = function() {
                 randomBtn.classList.toggle('active');
                 _this.isRandom = !_this.isRandom;
+                if (_this.isRandom && arrRandom.indexOf(+_this.currentIndex) == -1) {
+                    arrRandom.push(+_this.currentIndex)
+                }
                 _this.setConfig("random", _this.isRandom)
             }
             //
@@ -180,15 +187,26 @@ const app = {
         this.loadCurrentSong()
         this.active();
     },
+
     random: function() {
         let randomIndex;
+        if (arrRandom.length >= this.song.length) {
+            arrRandom = [];
+        }
         do {
             randomIndex = Math.floor(Math.random() * this.song.length)
 
-        } while (this.currentIndex == randomIndex);
-        this.currentIndex = randomIndex;
-        this.loadCurrentSong();
-        this.active();
+        } while ((this.currentIndex == randomIndex));
+        if (arrRandom.indexOf(randomIndex) == -1) {
+            this.currentIndex = randomIndex;
+            arrRandom.push(this.currentIndex);
+            console.log(arrRandom, 'aaa');
+            this.loadCurrentSong();
+            this.active();
+        } else {
+            this.random();
+        }
+
     },
     active: function() {
         let allSong = $$('.song');
