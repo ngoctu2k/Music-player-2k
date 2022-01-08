@@ -41,10 +41,4 @@ export const song = [{
         path: 'assets/music/hard carry.mp3',
         image: 'assets/img/hard carry.jpg'
     },
-    {
-        name: 'Poison',
-        single: 'GOT7',
-        path: 'assets/music/poison.mp3',
-        image: 'assets/img/poison.jpg'
-    },
 ]
